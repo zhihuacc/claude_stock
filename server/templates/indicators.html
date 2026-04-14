@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% set title = "Indicators Browser" %}
+{% block content %}
+
+<form method="get" action="/indicators">
+  Symbol:
+  <select name="symbol">
+    <option value="">-- select --</option>
+    {% for s in symbols %}
+    <option value="{{ s }}" {% if s == symbol %}selected{% endif %}>{{ s }}</option>
+    {% endfor %}
+  </select>
+  &nbsp;
+  Timeframe:
+  <select name="timeframe">
+    {% for tf in timeframes %}
+    <option value="{{ tf }}" {% if tf == timeframe %}selected{% endif %}>{{ tf }}</option>
+    {% endfor %}
+  </select>
+  &nbsp;
+  Start: <input type="date" name="start" value="{{ start }}">
+  &nbsp;
+  End: <input type="date" name="end" value="{{ end }}">
+
+  {% if available_names %}
+  <br><br>
+  Indicators (leave all unchecked to show all):
+  <br>
+  {% for name in available_names %}
+  <label style="margin-right:0.8rem;">
+    <input type="checkbox" name="names" value="{{ name }}"
+           {% if name in selected_names %}checked{% endif %}>
+    {{ name }}
+  </label>
+  {% endfor %}
+  <br>
+  {% endif %}
+  <br>
+  <button type="submit">Apply</button>
+</form>
+
+{% if symbol %}
+<p>{{ total_rows }} rows &nbsp;|&nbsp; Page {{ page }} of {{ total_pages }}</p>
+<table>
+  <thead>
+    <tr>
+      <th>Datetime</th>
+      {% for col in columns %}<th>{{ col }}</th>{% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in rows %}
+    <tr>
+      <td>{{ row.datetime }}</td>
+      {% for col in columns %}
+      <td>
+        {%- set v = row[col] -%}
+        {%- if v is not none and v == v -%}
+          {{ "%.4f" | format(v) }}
+        {%- else -%}—{%- endif -%}
+      </td>
+      {% endfor %}
+    </tr>
+    {% else %}
+    <tr><td colspan="{{ columns | length + 1 }}">No data for selected filters.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="pagination">
+  {% if page > 1 %}
+  <a href="?symbol={{ symbol }}&timeframe={{ timeframe }}&start={{ start }}&end={{ end }}&page={{ page - 1 }}{% for n in selected_names %}&names={{ n }}{% endfor %}">&laquo; Prev</a>
+  {% endif %}
+  &nbsp; Page {{ page }} of {{ total_pages }} &nbsp;
+  {% if page < total_pages %}
+  <a href="?symbol={{ symbol }}&timeframe={{ timeframe }}&start={{ start }}&end={{ end }}&page={{ page + 1 }}{% for n in selected_names %}&names={{ n }}{% endfor %}">Next &raquo;</a>
+  {% endif %}
+</div>
+{% else %}
+<p>Select a symbol to view indicator values.</p>
+{% endif %}
+{% endblock %}

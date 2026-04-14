@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% set title = "Signals Browser" %}
+{% block content %}
+
+<form method="get" action="/signals">
+  Symbol:
+  <select name="symbol">
+    <option value="" {% if not symbol %}selected{% endif %}>All</option>
+    {% for s in symbols %}
+    <option value="{{ s }}" {% if s == symbol %}selected{% endif %}>{{ s }}</option>
+    {% endfor %}
+  </select>
+  &nbsp;
+  Timeframe:
+  <select name="timeframe">
+    {% for tf in timeframes %}
+    <option value="{{ tf }}" {% if tf == timeframe %}selected{% endif %}>{{ tf or "All" }}</option>
+    {% endfor %}
+  </select>
+  &nbsp;
+  Start: <input type="date" name="start" value="{{ start }}">
+  &nbsp;
+  End: <input type="date" name="end" value="{{ end }}">
+  <br><br>
+  Severity:
+  {% for sev in severities %}
+  <label style="margin-right:0.8rem;">
+    <input type="checkbox" name="severity" value="{{ sev }}"
+           {% if sev in selected_severities %}checked{% endif %}>
+    <span class="{{ sev }}">{{ sev }}</span>
+  </label>
+  {% endfor %}
+  &nbsp;&nbsp;
+  <button type="submit">Apply</button>
+</form>
+
+<p>{{ total_rows }} rows &nbsp;|&nbsp; Page {{ page }} of {{ total_pages }}</p>
+<table>
+  <thead>
+    <tr>
+      <th>Datetime</th>
+      <th>Symbol</th>
+      <th>Timeframe</th>
+      <th>Signal</th>
+      <th>Current Value</th>
+      <th>Threshold</th>
+      <th>Severity</th>
+      <th>Message</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in rows %}
+    <tr>
+      <td>{{ row.datetime }}</td>
+      <td>{{ row.symbol }}</td>
+      <td>{{ row.timeframe }}</td>
+      <td>{{ row.signal_name }}</td>
+      <td>{{ "%.2f" | format(row.current_value) if row.current_value is not none else "—" }}</td>
+      <td>{{ "%.2f" | format(row.threshold) if row.threshold is not none else "—" }}</td>
+      <td>
+        <span style="color: {% if row.severity == 'alert' %}#c00{% elif row.severity == 'warning' %}#a60{% else %}#077{% endif %}">
+          {{ row.severity }}
+        </span>
+      </td>
+      <td>{{ row.message or "—" }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="8">No signals for selected filters.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="pagination">
+  {% if page > 1 %}
+  <a href="?symbol={{ symbol }}&timeframe={{ timeframe }}&start={{ start }}&end={{ end }}&page={{ page - 1 }}{% for sev in selected_severities %}&severity={{ sev }}{% endfor %}">&laquo; Prev</a>
+  {% endif %}
+  &nbsp; Page {{ page }} of {{ total_pages }} &nbsp;
+  {% if page < total_pages %}
+  <a href="?symbol={{ symbol }}&timeframe={{ timeframe }}&start={{ start }}&end={{ end }}&page={{ page + 1 }}{% for sev in selected_severities %}&severity={{ sev }}{% endfor %}">Next &raquo;</a>
+  {% endif %}
+</div>
+{% endblock %}

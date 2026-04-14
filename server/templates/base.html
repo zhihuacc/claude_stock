@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Stock Tool — {{ title }}</title>
+  <style>
+    body { font-family: monospace; max-width: 1400px; margin: 0 auto; padding: 1rem; }
+    nav a { margin-right: 1.5rem; }
+    table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+    th, td { border: 1px solid #ccc; padding: 4px 8px; text-align: right; }
+    th { background: #f0f0f0; text-align: center; }
+    td:first-child { text-align: left; }
+    tr:nth-child(even) { background: #fafafa; }
+    form { margin-bottom: 1rem; }
+    select, input[type=date], input[type=text] { font-family: monospace; }
+    .alert { color: #c00; }
+    .warning { color: #a60; }
+    .info { color: #077; }
+    .pagination { margin-top: 0.5rem; }
+  </style>
+</head>
+<body>
+  <nav>
+    <strong>Stock Tool</strong> &nbsp;|&nbsp;
+    <a href="/">Dashboard</a>
+    <a href="/ohlcv">OHLCV</a>
+    <a href="/indicators">Indicators</a>
+    <a href="/signals">Signals</a>
+  </nav>
+  <hr>
+  <h2>{{ title }}</h2>
+  {% block content %}{% endblock %}
+</body>
+</html>

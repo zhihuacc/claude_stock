@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% set title = "Dashboard" %}
+{% block content %}
+
+<h3>Watchlist Status</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Symbol</th>
+      <th>Name</th>
+      <th>Timeframe</th>
+      <th>Last Bar</th>
+      <th>Row Count</th>
+      <th>Last Signal</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in status_rows %}
+    <tr>
+      <td>{{ row.symbol }}</td>
+      <td>{{ row.name or "—" }}</td>
+      <td>{{ row.timeframe }}</td>
+      <td>{{ row.last_datetime or "—" }}</td>
+      <td>{{ row.ohlcv_count }}</td>
+      <td>
+        {% if row.last_signal_name %}
+          <span class="{{ row.last_signal_severity }}">
+            {{ row.last_signal_name }}
+            ({{ (row.last_signal_datetime | string)[:10] }},
+            {{ row.last_signal_severity }})
+          </span>
+        {% else %}—{% endif %}
+      </td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="6">No data yet. Run <code>python cli.py run</code> to fetch data.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h3>Recent Signals</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Datetime</th>
+      <th>Symbol</th>
+      <th>Timeframe</th>
+      <th>Signal</th>
+      <th>Value</th>
+      <th>Threshold</th>
+      <th>Severity</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for sig in recent_signals %}
+    <tr>
+      <td>{{ sig.datetime }}</td>
+      <td>{{ sig.symbol }}</td>
+      <td>{{ sig.timeframe }}</td>
+      <td>{{ sig.signal_name }}</td>
+      <td>{{ "%.4f" | format(sig.current_value) if sig.current_value is not none else "—" }}</td>
+      <td>{{ "%.4f" | format(sig.threshold) if sig.threshold is not none else "—" }}</td>
+      <td><span class="{{ sig.severity }}">{{ sig.severity }}</span></td>
+    </tr>
+    {% else %}
+    <tr><td colspan="7">No signals yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

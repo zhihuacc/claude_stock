@@ -1,0 +1,150 @@
+# ── Watchlist ─────────────────────────────────────────────────────────────────
+watchlist:
+  - symbol: AAPL
+    name: Apple Inc.
+    sector: Technology
+  - symbol: MSFT
+    name: Microsoft Corp.
+    sector: Technology
+  - symbol: NVDA
+    name: NVIDIA Corp.
+    sector: Semiconductors
+  - symbol: SPY
+    name: S&P 500 ETF
+    sector: ETF
+  - symbol: QQQ
+    name: Nasdaq 100 ETF
+    sector: ETF
+
+# ── Data Settings ─────────────────────────────────────────────────────────────
+data:
+  timeframes: [1H, 1D, 1W, 1M]
+  initial_history_days: 730
+  initial_history_hours: 60
+  db_path: db/stock_data.db
+  timezone: America/New_York
+
+# ── Indicator Settings ────────────────────────────────────────────────────────
+indicators:
+  trend:
+    sma_periods: [20, 50, 200]
+    ema_periods: [9, 21]
+    macd:
+      fast: 12
+      slow: 26
+      signal: 9
+    adx_period: 14
+
+  momentum:
+    rsi_period: 14
+    stochastic:
+      k_period: 14
+      d_period: 3
+      smooth_k: 3
+    roc_period: 12
+    williams_r_period: 14
+
+  volatility:
+    bollinger_bands:
+      period: 20
+      std_dev: 2.0
+    atr_period: 14
+    keltner_channel:
+      ema_period: 20
+      atr_period: 10
+      multiplier: 2.0
+
+  volume:
+    obv: true
+    vwap: true
+    volume_sma_period: 20
+
+  support_resistance:
+    pivot_type: standard
+    week_high_low_periods: 52
+
+# ── Signal Settings ───────────────────────────────────────────────────────────
+signals:
+  enabled: true
+  timeframes: [1H, 1D, 1W]
+
+  rules:
+    rsi_oversold:
+      enabled: true
+      threshold: 30
+      severity: warning
+
+    rsi_overbought:
+      enabled: true
+      threshold: 70
+      severity: warning
+
+    golden_cross:
+      enabled: true
+      fast_period: 50
+      slow_period: 200
+      severity: alert
+
+    death_cross:
+      enabled: true
+      fast_period: 50
+      slow_period: 200
+      severity: alert
+
+    macd_bullish_crossover:
+      enabled: true
+      severity: info
+
+    macd_bearish_crossover:
+      enabled: true
+      severity: info
+
+    near_52w_high:
+      enabled: true
+      proximity_pct: 5.0
+      severity: info
+
+    near_52w_low:
+      enabled: true
+      proximity_pct: 5.0
+      severity: alert
+
+    bb_squeeze:
+      enabled: true
+      bandwidth_threshold: 0.05
+      severity: info
+
+    bb_breakout_upper:
+      enabled: true
+      severity: warning
+
+    bb_breakout_lower:
+      enabled: true
+      severity: warning
+
+    volume_spike:
+      enabled: true
+      multiplier: 2.0
+      severity: info
+
+# ── Output Settings ───────────────────────────────────────────────────────────
+output:
+  terminal:
+    enabled: true
+    color_theme: dark
+    show_all_indicators: false
+    table_style: rounded
+
+  html_report:
+    enabled: true
+    output_dir: reports/output/
+    filename_template: "report_{date}.html"
+    auto_open: false
+
+  logging:
+    enabled: true
+    log_dir: logs/
+    log_file: stock_tool.log
+    level: INFO
+    max_bytes: 10485760
+    backup_count: 5

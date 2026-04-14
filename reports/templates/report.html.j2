@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Stock Signal Report — {{ date }}</title>
+<style>
+  body { font-family: monospace; max-width: 1200px; margin: 0 auto; padding: 1rem; }
+  h1 { font-size: 1.2rem; }
+  h2 { font-size: 1rem; margin-top: 1.5rem; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.85rem; margin-bottom: 1rem; }
+  th, td { border: 1px solid #ccc; padding: 4px 8px; text-align: right; }
+  th { background: #f0f0f0; text-align: center; }
+  td:first-child, td:nth-child(2) { text-align: left; }
+  tr:nth-child(even) { background: #fafafa; }
+  .alert { color: #c00; font-weight: bold; }
+  .warning { color: #a60; font-weight: bold; }
+  .info { color: #077; }
+  .summary { font-size: 0.8rem; color: #555; margin-top: 1rem; }
+</style>
+</head>
+<body>
+<h1>Stock Signal Report — {{ date }}</h1>
+<p class="summary">
+  {{ total }} signal(s) across {{ n_symbols }} symbol(s) &nbsp;|&nbsp; Run time: {{ "%.1f"|format(run_time_s) }}s
+</p>
+
+{% for sev in ["alert", "warning", "info"] %}
+{% set group = by_severity[sev] %}
+{% if group %}
+<h2 class="{{ sev }}">{{ sev|upper }} ({{ group|length }})</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Symbol</th><th>Signal</th><th>Timeframe</th>
+      <th>Value</th><th>Threshold</th><th>Datetime</th><th>Message</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for sig in group %}
+    <tr>
+      <td>{{ sig.symbol }}</td>
+      <td>{{ sig.signal_name }}</td>
+      <td>{{ sig.timeframe }}</td>
+      <td>{{ sig.current_value }}</td>
+      <td>{{ sig.threshold }}</td>
+      <td>{{ sig.datetime }}</td>
+      <td>{{ sig.message }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+{% endfor %}
+</body>
+</html>
