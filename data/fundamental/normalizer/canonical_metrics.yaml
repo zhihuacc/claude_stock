@@ -1,0 +1,816 @@
+# Canonical metric registry.
+# Each entry defines the authoritative column name, display label, unit type,
+# whether raw values are percentage strings that need /100 conversion, and
+# all synonym strings found in company press releases.
+#
+# unit: amount (dollar millions) | ratio (0-1) | count (shares/units) | special
+# is_percentage: true => parse_percent() called; raw "44%" → stored as 0.44
+# synonyms: all equivalent label strings found across companies (case-insensitive match)
+# company_aliases: company-ticker-specific label overrides
+
+metrics:
+
+  # ── GAAP Income Statement ────────────────────────────────────────────────
+
+  - canonical: gaap_revenue
+    label: "Revenue"
+    unit: amount
+    is_percentage: false
+    section: income_statement
+    synonyms:
+      - "Net revenue"
+      - "Net revenues"
+      - "Revenue"
+      - "Revenues"
+      - "Total net revenue"
+      - "Total net revenues"
+      - "Total revenues"
+      - "Net sales"
+    company_aliases:
+      msft: "Revenue"
+      goog: "Revenues"
+      circle: "Total revenue"
+
+  - canonical: gaap_cost_of_revenue
+    label: "Cost of Revenue"
+    unit: amount
+    is_percentage: false
+    section: income_statement
+    synonyms:
+      - "Cost of revenue"
+      - "Cost of revenues"
+      - "Cost of sales"
+      - "Cost of goods sold"
+      - "Total cost of revenue"
+
+  - canonical: gaap_gross_profit
+    label: "Gross Profit"
+    unit: amount
+    is_percentage: false
+    section: income_statement
+    synonyms:
+      - "Gross profit"
+      - "Gross income"
+      - "Gross margin"           # AMD pre-2020 dollar row (no % in value)
+      - "Total gross profit"
+
+  - canonical: gaap_gross_margin_pct
+    label: "Gross Margin %"
+    unit: ratio
+    is_percentage: true
+    section: income_statement
+    synonyms:
+      - "Gross margin %"
+      - "Gross profit %"
+      - "Gross profit margin %"
+      - "Gross margin"           # when parser appends " %" suffix
+
+  - canonical: gaap_research_development_expense
+    label: "R&D Expense"
+    unit: amount
+    is_percentage: false
+    section: income_statement
+    synonyms:
+      - "Research and development"
+      - "Research and development expenses"
+      - "Research, development and related"
+      - "R&D expense"
+      - "Research and development expense"
+
+  - canonical: gaap_selling_general_admin_expense
+    label: "SG&A Expense"
+    unit: amount
+    is_percentage: false
+    section: income_statement
+    synonyms:
+      - "Marketing, general and administrative"
+      - "Selling, general and administrative"
+      - "Selling, general and administrative expenses"
+      - "General and administrative"
+      - "SG&A"
+    company_aliases:
+      msft: "Sales and marketing"
+      goog: "General and administrative"
+
+  - canonical: gaap_total_operating_expenses
+    label: "Total Operating Expenses"
+    unit: amount
+    is_percentage: false
+    section: income_statement
+    synonyms:
+      - "Total operating expenses"
+      - "Total operating costs and expenses"
+      - "Operating expenses"
+
+  - canonical: gaap_operating_income
+    label: "Operating Income"
+    unit: amount
+    is_percentage: false
+    section: income_statement
+    synonyms:
+      - "Operating income"
+      - "Operating income (loss)"
+      - "Income from operations"
+      - "Operating earnings"
+      - "Total operating income"
+    company_aliases:
+      msft: "Operating income"
+      goog: "Income from operations"
+
+  - canonical: gaap_operating_margin_pct
+    label: "Operating Margin %"
+    unit: ratio
+    is_percentage: true
+    section: income_statement
+    synonyms:
+      - "Operating margin %"
+      - "Operating income margin %"
+      - "Operating income margin"
+      - "Operating margin"       # when parser appends " %"
+
+  - canonical: gaap_interest_expense
+    label: "Interest Expense"
+    unit: amount
+    is_percentage: false
+    section: income_statement
+    synonyms:
+      - "Interest expense"
+      - "Interest expense, net"
+      - "Interest and other, net"
+      - "Interest income (expense), net"
+
+  - canonical: gaap_net_income
+    label: "Net Income"
+    unit: amount
+    is_percentage: false
+    section: income_statement
+    synonyms:
+      - "Net income"
+      - "Net income (loss)"
+      - "Net earnings"
+      - "Net earnings (loss)"
+      - "Net income attributable to common stockholders"
+    company_aliases:
+      goog: "Net income"
+      msft: "Net income"
+      circle: "Net income (loss)"
+
+  - canonical: gaap_net_margin_pct
+    label: "Net Margin %"
+    unit: ratio
+    is_percentage: true
+    section: income_statement
+    synonyms:
+      - "Net income margin %"
+      - "Net margin %"
+      - "Net profit margin %"
+
+  - canonical: gaap_diluted_earnings_per_share
+    label: "Diluted EPS"
+    unit: amount
+    is_percentage: false
+    section: income_statement
+    synonyms:
+      - "Diluted earnings per share"
+      - "Diluted net income per share"
+      - "Diluted earnings (loss) per share"
+      - "Net income per diluted share"
+      - "Diluted"                # AMD pre-2022 format (first occurrence = EPS)
+    company_aliases:
+      goog: "Diluted earnings per share of Class A and B common stock"
+
+  - canonical: gaap_basic_shares
+    label: "Basic Shares Outstanding"
+    unit: count
+    is_percentage: false
+    section: income_statement
+    synonyms:
+      - "Basic"
+      - "Basic shares"
+      - "Basic weighted average shares"
+      - "Weighted average shares outstanding - basic"
+
+  - canonical: gaap_diluted_shares
+    label: "Diluted Shares Outstanding"
+    unit: count
+    is_percentage: false
+    section: income_statement
+    synonyms:
+      - "Diluted"
+      - "Diluted shares"
+      - "Diluted weighted average shares"
+      - "Weighted average shares outstanding - diluted"
+
+  # ── GAAP Balance Sheet ───────────────────────────────────────────────────
+
+  - canonical: gaap_cash
+    label: "Cash and Cash Equivalents"
+    unit: amount
+    is_percentage: false
+    section: balance_sheet
+    synonyms:
+      - "Cash and cash equivalents"
+      - "Cash"
+
+  - canonical: gaap_short_term_investments
+    label: "Short-term Investments"
+    unit: amount
+    is_percentage: false
+    section: balance_sheet
+    synonyms:
+      - "Short-term investments"
+      - "Short-term marketable securities"
+      - "Current investments"
+
+  - canonical: gaap_accounts_receivable
+    label: "Accounts Receivable"
+    unit: amount
+    is_percentage: false
+    section: balance_sheet
+    synonyms:
+      - "Accounts receivable, net"
+      - "Accounts receivable"
+      - "Trade accounts receivable, net"
+      - "Net receivables"
+
+  - canonical: gaap_inventories
+    label: "Inventories"
+    unit: amount
+    is_percentage: false
+    section: balance_sheet
+    synonyms:
+      - "Inventories"
+      - "Inventory"
+      - "Inventories, net"
+
+  - canonical: gaap_total_current_assets
+    label: "Total Current Assets"
+    unit: amount
+    is_percentage: false
+    section: balance_sheet
+    synonyms:
+      - "Total current assets"
+      - "Current assets"
+
+  - canonical: gaap_total_assets
+    label: "Total Assets"
+    unit: amount
+    is_percentage: false
+    section: balance_sheet
+    synonyms:
+      - "Total assets"
+      - "Total Assets"
+
+  - canonical: gaap_total_current_liabilities
+    label: "Total Current Liabilities"
+    unit: amount
+    is_percentage: false
+    section: balance_sheet
+    synonyms:
+      - "Total current liabilities"
+      - "Current liabilities"
+
+  - canonical: gaap_long_term_debt
+    label: "Long-term Debt"
+    unit: amount
+    is_percentage: false
+    section: balance_sheet
+    synonyms:
+      - "Long-term debt"
+      - "Long-term debt, net"
+      - "Long-term debt, net of current portion"
+      - "Long-term notes payable"
+
+  - canonical: gaap_stockholders_equity
+    label: "Stockholders' Equity"
+    unit: amount
+    is_percentage: false
+    section: balance_sheet
+    synonyms:
+      - "Total stockholders' equity"
+      - "Stockholders' equity"
+      - "Total shareholders' equity"
+      - "Total equity"
+
+  # ── GAAP Cash Flow ───────────────────────────────────────────────────────
+
+  - canonical: gaap_operating_cash_flow
+    label: "Operating Cash Flow"
+    unit: amount
+    is_percentage: false
+    section: cash_flow
+    synonyms:
+      - "Net cash provided by operating activities"
+      - "Net cash provided by operating activities of continuing operations"
+      - "Cash provided by operating activities"
+      - "Operating activities"
+      - "Net cash from operating activities"
+
+  - canonical: gaap_capital_expenditure
+    label: "Capital Expenditure"
+    unit: amount
+    is_percentage: false
+    section: cash_flow
+    synonyms:
+      - "Purchases of property and equipment"
+      - "Capital expenditures"
+      - "Property and equipment additions"
+      - "Acquisition of property and equipment"
+      - "Payments for property and equipment"
+
+  # ── Non-GAAP Adjustments ─────────────────────────────────────────────────
+
+  - canonical: non_gaap_gross_profit
+    label: "Non-GAAP Gross Profit"
+    unit: amount
+    is_percentage: false
+    section: non_gaap
+    synonyms:
+      - "Non-GAAP gross profit"
+      - "Adjusted gross profit"
+      - "Non-GAAP Gross profit"
+    company_aliases:
+      nvda: "Non-GAAP gross profit"
+      msft: "Non-GAAP gross margin"    # MSFT uses "margin" for dollar amounts occasionally
+      goog: "Non-GAAP operating income"  # GOOG non-GAAP starts at operating income level
+
+  - canonical: non_gaap_gross_margin_pct
+    label: "Non-GAAP Gross Margin %"
+    unit: ratio
+    is_percentage: true
+    section: non_gaap
+    synonyms:
+      - "Non-GAAP gross margin %"
+      - "Non-GAAP gross margin"          # when parser appends " %"
+      - "Adjusted gross margin %"
+      - "Non-GAAP Gross margin %"
+
+  - canonical: non_gaap_operating_expenses
+    label: "Non-GAAP Operating Expenses"
+    unit: amount
+    is_percentage: false
+    section: non_gaap
+    synonyms:
+      - "Non-GAAP operating expenses"
+      - "Non-GAAP total operating expenses"
+      - "Adjusted operating expenses"
+
+  - canonical: non_gaap_operating_expense_margin_pct
+    label: "Non-GAAP OpEx/Revenue %"
+    unit: ratio
+    is_percentage: true
+    section: non_gaap
+    synonyms:
+      - "Non-GAAP operating expenses/revenue %"
+      - "Non-GAAP operating expenses/revenue%"
+      - "Non-GAAP OpEx margin %"
+
+  - canonical: non_gaap_operating_income
+    label: "Non-GAAP Operating Income"
+    unit: amount
+    is_percentage: false
+    section: non_gaap
+    synonyms:
+      - "Non-GAAP operating income"
+      - "Adjusted operating income"
+      - "Non-GAAP income from operations"
+      - "Non-GAAP Operating income"
+    company_aliases:
+      msft: "Non-GAAP operating income"
+      goog: "Non-GAAP operating income"
+
+  - canonical: non_gaap_operating_margin_pct
+    label: "Non-GAAP Operating Margin %"
+    unit: ratio
+    is_percentage: true
+    section: non_gaap
+    synonyms:
+      - "Non-GAAP operating margin %"
+      - "Non-GAAP operating margin"      # when parser appends " %"
+      - "Adjusted operating margin %"
+      - "Non-GAAP Operating margin %"
+
+  - canonical: non_gaap_net_income
+    label: "Non-GAAP Net Income"
+    unit: amount
+    is_percentage: false
+    section: non_gaap
+    synonyms:
+      - "Non-GAAP net income"
+      - "Non-GAAP net income / earnings per share"
+      - "Adjusted net income"
+      - "Non-GAAP Net income"
+    company_aliases:
+      msft: "Non-GAAP net income"
+      goog: "Non-GAAP net income"
+
+  - canonical: non_gaap_diluted_earnings_per_share
+    label: "Non-GAAP Diluted EPS"
+    unit: amount
+    is_percentage: false
+    section: non_gaap
+    synonyms:
+      - "Non-GAAP diluted earnings per share"
+      - "Non-GAAP diluted net income per share"
+      - "Non-GAAP net income / earnings per share"  # AMD EPS table row
+      - "Adjusted diluted EPS"
+      - "Non-GAAP diluted EPS"
+    company_aliases:
+      msft: "Non-GAAP diluted earnings per share"
+      goog: "Non-GAAP diluted earnings per share"
+
+  - canonical: non_gaap_adjusted_ebitda
+    label: "Adjusted EBITDA"
+    unit: amount
+    is_percentage: false
+    section: non_gaap
+    synonyms:
+      - "Adjusted EBITDA"
+      - "Non-GAAP Adjusted EBITDA"
+      - "EBITDA (adjusted)"
+    company_aliases:
+      circle: "Adjusted EBITDA"
+
+  # ── Segment/Growth Metrics — AMD ─────────────────────────────────────────
+
+  - canonical: seg_datacenter_revenue
+    label: "Data Center Revenue"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "Data Center Segment"
+      - "Data Center"
+      - "Data center"
+    company_aliases:
+      amd: "Data Center Segment"
+      nvda: "Data Center"
+
+  - canonical: seg_datacenter_operating_income
+    label: "Data Center Operating Income"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "Data Center Segment"    # second occurrence = operating income
+      - "Data Center operating income"
+
+  - canonical: seg_client_revenue
+    label: "Client Revenue"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "Client"
+      - "Client Segment"
+      - "Client segment"
+    company_aliases:
+      amd: "Client"
+
+  - canonical: seg_client_operating_income
+    label: "Client Operating Income"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "Client Segment"          # second occurrence
+      - "Client operating income"
+      - "Client and Gaming Segment"
+
+  - canonical: seg_gaming_revenue
+    label: "Gaming Revenue"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "Gaming"
+      - "Gaming Segment"
+      - "Gaming segment"
+    company_aliases:
+      amd: "Gaming"
+      nvda: "Gaming"
+      msft: "Xbox content and services"
+
+  - canonical: seg_gaming_operating_income
+    label: "Gaming Operating Income"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "Gaming operating income"
+      - "Gaming Segment"           # second occurrence
+
+  - canonical: seg_embedded_revenue
+    label: "Embedded Revenue"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "Embedded Segment"
+      - "Embedded"
+      - "Embedded segment"
+    company_aliases:
+      amd: "Embedded Segment"
+
+  - canonical: seg_embedded_operating_income
+    label: "Embedded Operating Income"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "Embedded Segment"         # second occurrence
+      - "Embedded operating income"
+
+  # ── Segment/Growth Metrics — NVIDIA ────────────────────────────────────────
+
+  - canonical: seg_professional_visualization_revenue
+    label: "Professional Visualization Revenue"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "Professional Visualization"
+      - "Pro Visualization"
+      - "ProViz"
+
+  - canonical: seg_automotive_revenue
+    label: "Automotive Revenue"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "Automotive"
+      - "Automotive revenue"
+
+  - canonical: seg_oem_other_revenue
+    label: "OEM & Other Revenue"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "OEM & Other"
+      - "OEM and Other"
+      - "OEM"
+
+  # ── Segment/Growth Metrics — Microsoft ─────────────────────────────────────
+
+  - canonical: seg_intelligent_cloud_revenue
+    label: "Intelligent Cloud Revenue"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "Intelligent Cloud"
+      - "Intelligent cloud"
+
+  - canonical: seg_intelligent_cloud_operating_income
+    label: "Intelligent Cloud Operating Income"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "Intelligent Cloud operating income"
+
+  - canonical: seg_productivity_biz_revenue
+    label: "Productivity & Business Processes Revenue"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "Productivity and Business Processes"
+      - "Productivity & Business Processes"
+
+  - canonical: seg_productivity_biz_operating_income
+    label: "Productivity & Business Processes Operating Income"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "Productivity and Business Processes operating income"
+
+  - canonical: seg_more_personal_computing_revenue
+    label: "More Personal Computing Revenue"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "More Personal Computing"
+      - "More personal computing"
+
+  - canonical: seg_more_personal_computing_operating_income
+    label: "More Personal Computing Operating Income"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "More Personal Computing operating income"
+
+  - canonical: seg_azure_growth_pct
+    label: "Azure Revenue Growth YoY %"
+    unit: ratio
+    is_percentage: true
+    section: segment_data
+    synonyms:
+      - "Azure and other cloud services"
+      - "Azure revenue growth"
+      - "Azure and other cloud services growth"
+
+  - canonical: seg_m365_commercial_revenue
+    label: "Microsoft 365 Commercial Revenue"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "Microsoft 365 Commercial products and cloud services"
+      - "Microsoft 365 Commercial"
+      - "Office 365 Commercial"
+
+  # ── Segment/Growth Metrics — Google/Alphabet ───────────────────────────────
+
+  - canonical: seg_google_search_revenue
+    label: "Google Search Revenue"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "Google Search & other"
+      - "Google search & other"
+      - "Search and other"
+      - "Google Search"
+
+  - canonical: seg_youtube_ads_revenue
+    label: "YouTube Ads Revenue"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "YouTube ads"
+      - "YouTube advertising"
+      - "YouTube"
+
+  - canonical: seg_google_network_revenue
+    label: "Google Network Revenue"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "Google Network"
+      - "Google Network Members' properties"
+      - "Network"
+
+  - canonical: seg_google_subscriptions_revenue
+    label: "Google Subscriptions & Platforms Revenue"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "Google subscriptions, platforms, and devices"
+      - "Google subscriptions, platforms & devices"
+      - "Subscriptions, platforms, and devices"
+      - "Other Google revenues"
+
+  - canonical: seg_google_services_total_revenue
+    label: "Google Services Revenue"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "Google Services"
+      - "Google services"
+      - "Total Google Services revenues"
+
+  - canonical: seg_google_services_operating_income
+    label: "Google Services Operating Income"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "Google Services operating income"
+      - "Google services operating income"
+
+  - canonical: seg_google_cloud_revenue
+    label: "Google Cloud Revenue"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "Google Cloud"
+      - "Google cloud"
+      - "Google Cloud Platform"
+
+  - canonical: seg_google_cloud_operating_income
+    label: "Google Cloud Operating Income"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "Google Cloud operating income"
+
+  - canonical: seg_other_bets_revenue
+    label: "Other Bets Revenue"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "Other Bets"
+      - "Other bets"
+      - "Other Bets revenues"
+
+  # ── Segment/Growth Metrics — Circle ────────────────────────────────────────
+
+  - canonical: seg_usdc_reserve_income
+    label: "USDC Net Reserve Income"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "Net interest income"
+      - "USDC net reserve income"
+      - "Net reserve income"
+      - "Reserve interest income"
+      - "Interest and investment income"
+
+  - canonical: seg_subscription_services_revenue
+    label: "Subscription & Services Revenue"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "Subscription and services revenue"
+      - "SaaS revenue"
+      - "Circle Mint"
+      - "Subscription revenue"
+      - "Services revenue"
+
+  - canonical: seg_usdc_circulation
+    label: "USDC Circulation (billions)"
+    unit: special
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "USDC in circulation"
+      - "Total USDC in circulation"
+      - "USDC outstanding"
+      - "USDC supply"
+
+  - canonical: seg_reserve_yield_pct
+    label: "USDC Reserve Yield %"
+    unit: ratio
+    is_percentage: true
+    section: segment_data
+    synonyms:
+      - "Effective reserve yield"
+      - "Reserve yield"
+      - "USDC reserve yield"
+      - "Average reserve yield"
+
+  # ── Shared segment summary metrics ──────────────────────────────────────────
+
+  - canonical: cash_and_short_term_investments
+    label: "Cash & Short-term Investments"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "Cash, cash equivalents and short-term investments"
+      - "Cash, cash equivalents and marketable securities"
+      - "Cash and short-term investments"
+      - "Total cash and investments"
+
+  - canonical: free_cash_flow
+    label: "Free Cash Flow"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "Free cash flow"
+      - "Free Cash Flow"
+
+  - canonical: total_debt
+    label: "Total Debt"
+    unit: amount
+    is_percentage: false
+    section: segment_data
+    synonyms:
+      - "Total debt"
+      - "Total Debt"
+      - "Total borrowings"
+
+  - canonical: operating_cash_flow_margin_pct
+    label: "OCF Margin %"
+    unit: ratio
+    is_percentage: true
+    section: derived
+    synonyms:
+      - "Operating cash flow margin %"
+      - "Operating cash flow margin % from continuing operations"
+      - "OCF margin %"
+
+  - canonical: free_cash_flow_margin_pct
+    label: "FCF Margin %"
+    unit: ratio
+    is_percentage: true
+    section: derived
+    synonyms:
+      - "Free cash flow margin %"
+      - "FCF margin %"
